@@ -1,7 +1,7 @@
 # Study Log
 [Vulkan Engine tutorial](https://youtube.com/playlist?list=PL8327DO66nu9qYVKLDmdLW_84-yE4auCR&si=RmYj1OuZB_rt8zqs)
 ## Chapter 1 : create windows
-
+[code](https://github.com/junyiwuu/vulkanEngine/tree/00a8953686fdff02c80504df77a1088ce2ec82bf)
 ### **glfwWindowHint (int hint, int value) :**
 
 [glfwWindowHint link](https://www.glfw.org/docs/3.3/group__window.html#ga7d9c8c62384b1e2821c4dc48952d2033)
@@ -12,15 +12,16 @@
 
     Hard Constraint: 
 
-        A strict requirement that must be satisfied. If a hard constraint cannot be fulfilled, the associated operation will fail. In the context of the image, specific window hints like GLFW_STEREO or GLFW_CLIENT_API are examples of hard constraints. These must align exactly with the system's capabilities. 
+        
+    >A strict requirement that must be satisfied. If a hard constraint cannot be fulfilled, the associated operation will fail. In the context of the image, specific window hints like GLFW_STEREO or GLFW_CLIENT_API are examples of hard constraints. These must align exactly with the system's capabilities. 
 
     Soft Constraint: 
 
-        A flexible preference. The system will attempt to match the soft constraint as closely as possible, but it's not mandatory for success. If the exact condition isn't met, the operation can still proceed with the closest alternative available. 
+    >A flexible preference. The system will attempt to match the soft constraint as closely as possible, but it's not mandatory for success. If the exact condition isn't met, the operation can still proceed with the closest alternative available. 
 
     Hint: 
 
-        A configuration setting or guideline provided by the developer to influence how the system behaves. In the GLFW context, hints are parameters used to define the properties of a window or OpenGL context, such as whether double buffering is enabled (GLFW_DOUBLEBUFFER). These hints can be hard or soft constraints, depending on the specific functionality and context. 
+    >A configuration setting or guideline provided by the developer to influence how the system behaves. In the GLFW context, hints are parameters used to define the properties of a window or OpenGL context, such as whether double buffering is enabled (GLFW_DOUBLEBUFFER). These hints can be hard or soft constraints, depending on the specific functionality and context. 
         
 ### **GLFWwindow:**
 
