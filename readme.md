@@ -1,5 +1,24 @@
 # Study Log
 [Vulkan Engine tutorial](https://youtube.com/playlist?list=PL8327DO66nu9qYVKLDmdLW_84-yE4auCR&si=RmYj1OuZB_rt8zqs)
+
+
+### Overview notes:
+FirstApp : initialize the window, initialize the graphicPipeline(read SPRV files into buffers)
+
+
+### Compile notes:
+**when conflict happen**:   
+like cmakecache doesnt match: remove build file , start again
+
+    rm -rf build
+
+**add_executable how to include all cpp file**:   
+1.  `file(GLOB SOURCES "*.cpp")` searching for current folder, adding all cpp file into SOURCES variable and then `add_executable(vulkanTest ${SOURCES})`. Therefore collect all cpp under current directory
+    > but if add more cpp files later, need to cmake again
+
+2. manually add all cpp files name here
+
+
 ## Chapter 1 : create windows
 [code](https://github.com/junyiwuu/vulkanEngine/tree/00a8953686fdff02c80504df77a1088ce2ec82bf)
 ### **glfwWindowHint (int hint, int value) :**
@@ -91,3 +110,128 @@ steps:
 
 
 lveWindow_app(object) (basic) --> been used in FirstApp class, part of initialize. --> 
+
+
+
+
+## Chapter 2 : read spv and build pipeline
+
+gl_VertextIndex: contains the index of the current vertext for each time our main function run
+
+
+**`layout(location=0) out vec4 outColor;`**
+
+> layout(location=0):  
+layout qualifier. Specifies the location index of this output variable. currently return 0, meaning this variable will be linked to the first framebuffer
+
+> out: 
+this variable is an output of the fragment shader. fragment shader produce color values for each pixel, this is where the color will be stored
+
+>outColor: 
+the name of output variable
+
+OVERALL:
+a output variable , name is "outColor"-- fragment shader, location is 0, vec4
+
+
+
+----------------------------
+### compile GLSL to SPIR-V
+we need to compile the shader code into intermediate binary formate (SPIR-V). like compile in c++ 
+
+
+
+-o specifiy our compiled output file's name, int his caser we use the same name
+
+**compile.sh**   
+.sh file is the shell file, we create compile.sh:
+
+`/usr/bin/glslc shaders/simple_shader.vert -o shaders/simple_shader.vert.spv`
+
+`/usr/bin/glslc shaders/simple_shader.frag -o shaders/simple_shader.frag.spv`
+
+`chmod +x compile.sh` make this file executable
+
+
+----
+pipeline build
+
+std::vector    
+dynamic sized array
+
+`static std::vector<char> readFile(const std::string& filepath);` read file content and return with formate std::vector\<char>
+
+### **How to read the file**   
+`std::ifstream` input stream, for reading files   
+`file()` file function, ( filepath ,bit flags(open mode))   
+`std::ios::ate` at the end, this mean once the file open we seek the end immediately   
+`std::ios::binary` open the file in binary mode, raw stream of bytes, avoid any unwanted text transformations  
+`std::ios::ate | std::ios::binary` we want both gpointer o to end the file (so can use tellg()) , and read as binary
+
+why {} instead of (): 
+1. uniform initialization. so we tell this is object definition, not function declaration.
+2. strict type checking, prevent implicit type conversion
+
+
+**Open file error check**
+```cpp
+    if (!file.is_open()){
+        throw std::runtime_error("fail to open file: " + filepath)
+        //filepath is incorrect or no permission to open the file
+    }
+```
+
+**File size**   
+***the last of file***    
+file.tellg() return `std::streampos`daata, means the pointer's location in the file
+```cpp
+size_t filesize = static_cast<size_t>(file.tellg());
+```
+> other example: 
+> ```cpp
+>double value = 3.14;
+>int intValue = static_cast<int>(value); // transfer to >integer
+>std::cout << intValue; // output: 3 
+>```
+***the first of the file***
+```cpp
+file.seekg(0);  //move the pointer to the beginning
+```
+**Create buffer**
+
+    file.read(buffer.data(), fileSize);
+        file.close();
+        return buffer;
+
+**createGraphicPipeline**
+
+    auto vertCode = readFile(vertFilepath);
+    auto fragCode = readFile(fragFilepath);
+we read files into buffers.
+
+**lvePipeline constructor**   
+call createGraphicPiline function --> create buffers --> read files for buffers, store data into them.
+
+
+
+**back to FirstApp**: 
+```cpp
+namespace lve{
+    class FirstApp{
+      public:
+        static constexpr int width = 800;
+        static constexpr int height = 600;
+
+        void run();
+
+      private:
+        LveWindow LveWindow_app{width , height, "hello vulkan"} ;
+
+        lvePipeline lvePipeline_app{"../shaders/simple_shader.vert.spv", "../shaders/simple_shader.frag.spv"};
+    };
+}
+```
+add the lvePipeline in FirstApp private, so when initialize the object, it also get called
+
+
+````````````````

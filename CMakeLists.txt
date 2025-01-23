@@ -14,8 +14,15 @@ find_package(glfw3 REQUIRED)
 
 
 
+# file(GLOB SOURCES "*.cpp")
 #add the executable target
-add_executable(vulkanTest main.cpp lve_window.cpp first_app.cpp)
+add_executable(vulkanTest 
+        main.cpp 
+        lve_window.cpp 
+        first_app.cpp
+        lve_pipeline.cpp
+        )
+
 
 #link the required libraries
 #第一个参数是链接库的目标

@@ -1,6 +1,7 @@
 #pragma once
 
 #include"lve_window.hpp"
+#include "lve_pipeline.hpp"
 
 namespace lve{
     class FirstApp{
@@ -13,5 +14,7 @@ namespace lve{
 
       private:
         LveWindow LveWindow_app{width , height, "hello vulkan"} ;
+
+        lvePipeline lvePipeline_app{"../shaders/simple_shader.vert.spv", "../shaders/simple_shader.frag.spv"};
     };
 }
