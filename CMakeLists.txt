@@ -18,8 +18,9 @@ find_package(glfw3 REQUIRED)
 #add the executable target
 add_executable(vulkanTest 
         main.cpp 
+        first_app.cpp 
         lve_window.cpp 
-        first_app.cpp
+        lve_device.cpp
         lve_pipeline.cpp
         )
 

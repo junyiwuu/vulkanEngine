@@ -115,6 +115,7 @@ lveWindow_app(object) (basic) --> been used in FirstApp class, part of initializ
 
 
 ## Chapter 2 : read spv and build pipeline
+[code](https://github.com/junyiwuu/vulkanEngine/tree/b54ca5d99010c94e903fa41f704188dc7adc9ae1)
 
 gl_VertextIndex: contains the index of the current vertext for each time our main function run
 
@@ -234,4 +235,244 @@ namespace lve{
 add the lvePipeline in FirstApp private, so when initialize the object, it also get called
 
 
+
+## Chapter 3: 
+
+lve_device
+the first thing is creating a vulkan instance,intilize the vulkan library and the connection between our applicaton and vulkan .
+
+next set up  the validation layer. enable validation layer to check for errors, vulkan sensitive to errors, small errors will result crash 
+
+
+
+1. Initializing vulkan and picking a physical device (that capable to working vulkan api)
+2. steup validation layer to debug
+
+
+**typedef pointer**:
+
+    typedef existing_type* new_pointer_type;
+
+    typedef int* IntPointer; // define a pointer that point to Int
+    IntPointer p1, p2; // same as int* p1; int* p2;
+
+using existed type and give it alias.
+
+
+
+
+
+
+
+### PIPELINE
+
+struct PipelineConfigInfo {};       
+//pipeline configuration
+
+
+>LvePipeline   
+>|   
+>|PUBLIC:   
+>|--constructor (device, vert and frag files, config info)  
+>|--destroucctor   
+>|--protection from copy    
+>|--pipeline config ingo (static)(default pipeline fig info)   
+>|   
+>|PRIVATE:    
+>|--read file (spv into buffer)    
+>|--createGraphicPipeline    
+>|--createShaderModule (create shading module)
+>|     
+>|    
+>|MEMBERS:    
+>|lve device     
+>|VkPipeline (graphic pipeline)    
+>|VkShaderModule (vert and frag)
+
+---
+
+**VkShaderModule**   
+GLSL container on GPU, VkShaderModule is a handle   
+* The whole process:   
+write GLSL--->  compile it into SPIR-V --->using VkShaderModule tell Vulka: here is the compiled code, keep it   
+`VK_DEFINE_NON_DISPATCHABLE_HANDLE(VkShaderModule)`
+
+
+----
+**createShaderModule**   
+`void createShaderModule( const std::vector<char>& code, VkShaderModule* shaderModule);`
+- code : SPIR-V code
+- VkShaderModule, handle, pointer
+```cpp
+void LvePipeline::createShaderModule( 
+    const std::vector<char>& code, VkShaderModule* shaderModule){
+    VkShaderModuleCreateInfo createInfo{};
+    createInfo.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
+    createInfo.codeSize = code.size();
+    createInfo.pCode = reinterpret_cast<const uint32_t*>(code.data());
+
+    if (vkCreateShaderModule( lveDevice.device() , &createInfo, nullptr, shaderModule) != VK_SUCCESS){
+        throw std::runtime_error("failed to create shader module");
+    }
+
+}
+```
+**VkShaderModuleCreateInfo**    
+this is Vulkan struct
+```cpp
+typedef struct VkShaderModuleCreateInfo {
+    VkStructureType              sType;
+    const void*                  pNext;
+    VkShaderModuleCreateFlags    flags;
+    size_t                       codeSize;
+    const uint32_t*              pCode;
+} VkShaderModuleCreateInfo;
+```
+- sType : must be   VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO
+- pNexr: for extension use
+- codeSize : SPIR-V code file size
+- pCode : pointer point to the shader code
+
+**vkCreateShaderModule**
+```cpp
+VKAPI_ATTR VkResult VKAPI_CALL vkCreateShaderModule(
+    VkDevice                                    device,
+    const VkShaderModuleCreateInfo*             pCreateInfo,
+    const VkAllocationCallbacks*                pAllocator,
+    VkShaderModule*                             pShaderModule);
+```
+**VK_SUCCESS**    
+enum type, VK_SUCCESS =0   
+if (vkCreateShaderModule( lveDevice.device() , &createInfo, nullptr, shaderModule) != VK_SUCCESS) **----->** if creating not success
+
+-----
+
+`LvePipeline(const LvePipeline& ) = delete;`   
+删除拷贝构造函数：当我们要基于一个已有的对象创建一个新对象时，毁掉用这个函数
+
+    LvePipeline pipeline1(...);  // 正常构造
+    LvePipeline pipeline2 = pipeline1;  // 这里会调用拷贝构造函数
+
+- const :  during the copy, no change original object
+- LvePipeline&  : uisng referece, so no copy
+
+Purpose: DONT ALLOW anyone copy this an existed pipeline object. each pipeline object will have different memory address (two individual houses)
+
+    ClassName(const ClassName& ) = delete
+
+
+
+LOGIC:
+
 ````````````````
+
+BACKUP:
+Instance
+Instance 是 Vulkan 的起点，表示一个 Vulkan 应用程序的实例。它是初始化 Vulkan 和与操作系统集成的第一步。通过创建 Instance，你可以连接到 Vulkan 驱动程序并准备 Vulkan 环境。
+
+Device
+Device 表示你的物理 GPU 的一个逻辑抽象。通过 Vulkan，应用程序需要选择一个物理设备（Physical Device），然后创建一个逻辑设备（Logical Device）以与之交互。逻辑设备管理 GPU 的资源和队列（Queue）。
+
+Surface
+Surface 是一个 Vulkan 的对象，用来描述窗口系统的绘图表面（例如，屏幕上的一个窗口）。在使用 Vulkan 渲染到屏幕时，你需要通过 Surface 将 Vulkan 渲染操作与操作系统的窗口系统结合起来。
+
+
+最基础的概念:
+
+
+VkInstance: Vulkan的全局上下文
+VkPhysicalDevice: 代表实体显卡硬件
+VkDevice: 从物理设备创建的逻辑设备,是你主要交互的对象
+VkQueue: 命令的执行队列
+VkCommandBuffer: 记录渲染命令的缓冲区
+
+
+内存和资源相关:
+
+
+VkBuffer: 用于存储顶点数据、索引等
+VkImage: 2D/3D图像资源
+VkDeviceMemory: GPU内存的抽象
+VkDescriptorSet: 着色器资源绑定集合
+VkSampler: 纹理采样器
+
+
+渲染管线相关:
+
+
+VkPipeline: 图形/计算管线
+VkShaderModule: 着色器模块
+VkRenderPass: 渲染过程配置
+VkFramebuffer: 渲染目标帧缓冲
+VkPipelineLayout: 管线布局
+
+
+同步相关:
+
+
+VkFence: CPU-GPU同步
+VkSemaphore: GPU-GPU同步
+VkEvent: 细粒度同步
+
+
+呈现相关:
+
+
+VkSwapchain: 交换链,管理显示用的图像
+VkSurfaceKHR: 显示表面
+
+重要的工作流程:
+
+初始化: Instance -> Physical Device -> Logical Device
+资源创建: Buffer/Image -> 分配内存 -> 绑定
+渲染准备: Shader -> Pipeline -> RenderPass -> Framebuffer
+命令记录: CommandBuffer中记录绘制命令
+提交执行: Submit到Queue执行
+同步和呈现: 使用Fence/Semaphore确保正确执行顺序
+
+
+
+显式内存管理
+
+
+Vulkan 要求开发者手动管理内存
+需要处理内存分配、释放、同步
+需要理解设备内存(Device Memory)和主机内存(Host Memory)的区别和交互
+
+
+同步机制
+
+
+Vulkan 的命令执行是异步的
+需要使用 Semaphores（信号量）和 Fences（栅栏）来同步操作
+理解这些同步原语的正确使用非常重要
+
+
+命令缓冲区(Command Buffers)
+
+
+所有渲染命令都需要记录在命令缓冲区中
+需要理解命令缓冲区的生命周期
+需要理解命令池(Command Pools)和命令缓冲区的关系
+
+
+渲染管线(Pipeline)
+
+
+Vulkan 的管线是完全固定的
+需要提前定义所有状态
+管线创建过程复杂，涉及很多配置
+
+
+SPIR-V 着色器
+
+
+需要将着色器代码编译成 SPIR-V 格式
+理解着色器资源布局和绑定
+处理着色器接口变量
+
+这些概念之所以难理解，主要是因为：
+
+Vulkan 是底层 API，几乎不做任何自动化处理
+需要开发者明确指定每一个细节
+概念之间有复杂的依赖关系

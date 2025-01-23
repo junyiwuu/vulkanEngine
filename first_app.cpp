@@ -2,7 +2,7 @@
 
 namespace lve{
     void FirstApp::run(){
-        while (!LveWindow_app.shouldClose()){
+        while (!lveWindow_app.shouldClose()){
             //while our window doesnt want to close, pull window events
             glfwPollEvents();
         }
