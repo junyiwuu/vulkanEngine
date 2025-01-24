@@ -30,6 +30,7 @@ namespace lve {
         LveWindow &operator=(const LveWindow&) = delete;
 
         bool shouldClose() {return glfwWindowShouldClose(window);}
+        //VkExtent2D getExtend() {return {width, height}; }
 
         void createWindowSurface(VkInstance instance, VkSurfaceKHR *surface);
 

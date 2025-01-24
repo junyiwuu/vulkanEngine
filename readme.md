@@ -237,7 +237,7 @@ add the lvePipeline in FirstApp private, so when initialize the object, it also 
 
 
 ## Chapter 3: 
-
+[code](https://github.com/junyiwuu/vulkanEngine/tree/d52a0cd4cf65d366e987f077259bbd2d5749374b)   
 lve_device
 the first thing is creating a vulkan instance,intilize the vulkan library and the connection between our applicaton and vulkan .
 
@@ -359,6 +359,90 @@ if (vkCreateShaderModule( lveDevice.device() , &createInfo, nullptr, shaderModul
 Purpose: DONT ALLOW anyone copy this an existed pipeline object. each pipeline object will have different memory address (two individual houses)
 
     ClassName(const ClassName& ) = delete
+
+
+## Chapter 4: 
+
+Try to keep the logic here, think them as folders   
+
+    struct PipelineConfigInfo {
+        VkPipelineInputAssemblyStateCreateInfo inputAssemblyInfo;
+    };      
+
+    PipelineConfigInfo LvePipeline::defaultPipelineConfigInfo(uint32_t width,  uint32_t height){
+        PipelineConfigInfo configInfo{};
+
+        //inputAssemblyInfo is VkPipelineInputAssemblyStateCreateInfo
+        configInfo.inputAssemblyInfo.sType
+
+configInfo : data tyoe is PipelineConfigInfo
+configInfo{} : initialize -->execute `VkPipelineInputAssemblyStateCreateInfo inputAssemblyInfo;` so create a inputAssemblyInfo
+
+configInfo(PipelineConfigInfo DATATYPE) is a folder, in this folder including inputAssemblyInfo also including other data type like B, C, D ...... , then we want to set configInfo.inputAssemblyInfo.sType
+
+
+> `configInfo.inputAssemblyInfo.topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;`  
+Tell the vulkan we want it triangle, not a line(for example)
+
+- By default using **Triangle List**: everu 3 vertices are grouped as a triangle
+
+- Another opetion is **Triangle Strip**: for every vertices, use the previous two vertices and form a traingle , for example: v1, v2, (v3, v4, v5 ) v6, v7. Then next time become v1, v2, v3, (v4, v5, v6), v7.
+
+- other option: [VkPrimitiveTopology](https://registry.khronos.org/vulkan/specs/latest/man/html/VkPrimitiveTopology.html)
+
+**VkRect2D**:   
+where can be draw when rendering (frag a render area)
+
+
+**VkPipelineLayout**:   
+- This layout represents the interface layout between the graphic pipeline and shader resources.   
+- it describe how descriptors (like textures, uniform buffer etc) are organized and bound to the pipeline.
+- is a handle, pointer or reference to GPU resources\
+ pipelineLayout = nullptr;
+
+**VkRenderPass:**   
+allow you have multiple subpass. define render pass. VkRenderPass represents a rendering process definition. it describe how different phases(called subpasses) interact with framebuffers, including how color, depth, are handled
+
+**Subpass:**
+subpass means a render stage, for example one subpass is writing to color buffer, one is using depth buffer.
+
+
+**primitiveRestartEnable:**
+primtive restart allows you break a series of connected primitive (eg. a strip of triangles) using a special "restart index". 
+- Enable: no triangle strip
+- Disable: triangle strip
+
+
+**VkViewport.minDepth:**
+define the depth range used during rendering, which maps the clip-space z value (from the projection transformation) to the depth buffer.
+
+
+**VkPolygonMode:**
+
+    VK_POLYGON_MODE_FILL = 0,
+    VK_POLYGON_MODE_LINE = 1,
+    VK_POLYGON_MODE_POINT = 2,
+
+**VkPipelineColorBlendStateCreateInfo**    
+**VkPipelineColorBlendAttachmentState** : 
+is used to define the blending configuration for a single color attachment.  
+- A framebuffer can contain multiple color attachments.
+- for example when rendering to multiple render targets, each color attachment can have its own independent blending settings
+
+
+**Framebuffer attachments**:   
+a memory location where renderinng pipeline outputs data.   
+These attachments are typically part of a framebuffer, is used in conjunction with a render pass
+- color attachment
+- depth attachment
+
+Color blending. They are used to configure how graphic pipeline processes the colors of framebuffer attachments during rendering
+
+ORDER:
+1. VkGraphicsPipelineCreateInfo (top)
+2. VkPipelineShaderStageCreateInfo (part of the above)
+
+
 
 
 

@@ -15,7 +15,23 @@ namespace lve{
 //---------------------------------------
 
     struct PipelineConfigInfo {
+        VkViewport viewport;
+        VkRect2D scissor;
+        VkPipelineViewportStateCreateInfo viewportInfo;
         VkPipelineInputAssemblyStateCreateInfo inputAssemblyInfo;
+
+        VkPipelineRasterizationStateCreateInfo rasterizationInfo;
+        VkPipelineMultisampleStateCreateInfo multisampleInfo;
+
+        VkPipelineColorBlendStateCreateInfo colorBlendInfo;
+        VkPipelineColorBlendAttachmentState colorBlendAttachment;
+
+        VkPipelineDepthStencilStateCreateInfo depthStencilInfo;
+        VkPipelineLayout pipelineLayout = nullptr;
+        VkRenderPass renderPass = nullptr;
+        uint32_t subpass = 0;
+
+        
     };       
 
 //---------------------------------------------------
@@ -28,7 +44,7 @@ namespace lve{
             const std::string& fragFilepath,
             const PipelineConfigInfo& configInfo
             );
-        ~LvePipeline(){}
+        ~LvePipeline();
 
         //protection
         LvePipeline(const LvePipeline& ) = delete;
