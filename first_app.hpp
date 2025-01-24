@@ -1,25 +1,52 @@
 #pragma once
 
-#include"lve_window.hpp"
-#include "lve_pipeline.hpp"
 #include "lve_device.hpp"
+#include "lve_pipeline.hpp"
+#include"lve_window.hpp"
+#include "lve_swap_chain.hpp"
+
+
+#include <memory>
+#include <vector>
+
 
 namespace lve{
-    class FirstApp{
-      public:
-        //constexpre保证在编译时是已知的  
-        static constexpr int WIDTH = 800;
-        static constexpr int HEIGHT = 600;
 
-        void run();
 
-      private:
-        LveWindow lveWindow_app{WIDTH , HEIGHT, "hello vulkan"} ;
-        LveDevice lveDevice_app{lveWindow_app};
-        LvePipeline lvePipeline_app{
-            lveDevice_app, 
-            "../shaders/simple_shader.vert.spv", 
-            "../shaders/simple_shader.frag.spv",
-            LvePipeline::defaultPipelineConfigInfo(WIDTH, HEIGHT)};
-    };
+class FirstApp{
+  public:
+    //constexpre保证在编译时是已知的  
+    static constexpr int WIDTH = 800;
+    static constexpr int HEIGHT = 600;
+
+    FirstApp();
+    ~FirstApp();
+
+
+    FirstApp(const FirstApp&) = delete;  //禁止copy这个class的object
+    FirstApp &operator=(const FirstApp&) = delete;
+
+
+    void run();
+
+  private:
+
+    void createPipelineLayout();
+    void createPipeline();
+    void createCommandBuffers();
+    void drawFrame();
+
+
+    LveWindow lveWindow_app{WIDTH , HEIGHT, "hello vulkan"} ;
+    LveDevice lveDevice_app{lveWindow_app};
+    LveSwapChain lveSwapChain_app{ lveDevice_app, lveWindow_app.getExtend()};
+    
+    
+    std::unique_ptr<LvePipeline> lvePipeline ;
+    VkPipelineLayout pipelineLayout;
+    std::vector<VkCommandBuffer> commandBuffers;
+    
+};
+
+
 }

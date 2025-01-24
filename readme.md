@@ -362,6 +362,7 @@ Purpose: DONT ALLOW anyone copy this an existed pipeline object. each pipeline o
 
 
 ## Chapter 4: 
+[code](https://github.com/junyiwuu/vulkanEngine/tree/d282352785ff4ba909beed1d68cbaf0d96b6d935)
 
 Try to keep the logic here, think them as folders   
 
@@ -442,8 +443,24 @@ ORDER:
 1. VkGraphicsPipelineCreateInfo (top)
 2. VkPipelineShaderStageCreateInfo (part of the above)
 
+## Chapter 5:
+
+**VkExtent2D**   
+When you need to create a swap chain or framebuffer, you will need to tell the size
+> - It seems like just return width and height, whiy need to use this class?    
+This ensuresthe code type-safe, it clearly indicates that the returned values are vulkan-compatible dimensions, not arbitray integers
+
+**Command Buffer**   
+A command buffer that contains many functions, we call this command buffer, to execute bunch of functions
+
+Record commands buffers once at initialization and the reuse for each frame.
 
 
+
+
+Command Buffer lifecycle from the [tutorial](https://www.youtube.com/watch?v=_VOR6q3edig):
+
+![commandbuffer](images/notes/commandBufferLifecycle.png)
 
 
 LOGIC:

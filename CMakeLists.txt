@@ -22,6 +22,7 @@ add_executable(vulkanTest
         lve_window.cpp 
         lve_device.cpp
         lve_pipeline.cpp
+        lve_swap_chain.cpp
         )
 
 

@@ -16,6 +16,7 @@ int main(){
     }
 
 
+    /*
     uint32_t layerCount;
     vkEnumerateInstanceLayerProperties(&layerCount, nullptr);
     std::vector<VkLayerProperties> availableLayers(layerCount);
@@ -25,8 +26,8 @@ int main(){
     for (const auto& layer : availableLayers) {
         std::cout << "Available layer: " << layer.layerName << std::endl;
     }
-
+    */
 
 
     return EXIT_FAILURE;
-}
+}   
