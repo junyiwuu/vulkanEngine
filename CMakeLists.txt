@@ -12,7 +12,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 find_package(Vulkan REQUIRED)
 find_package(glfw3 REQUIRED)
 
-
+find_package(glm REQUIRED)
 
 # file(GLOB SOURCES "*.cpp")
 #add the executable target
@@ -23,9 +23,27 @@ add_executable(vulkanTest
         lve_device.cpp
         lve_pipeline.cpp
         lve_swap_chain.cpp
+        lve_model.cpp
         )
 
 
 #link the required libraries
 #第一个参数是链接库的目标
 target_link_libraries(vulkanTest Vulkan::Vulkan glfw)
+
+
+#set the shader source and output directory
+#set(SHADER_DIR ${CMAKE_SOURCE_DIR}/shaders)
+#set(SHADER_OUTPUT_DIR ${CMAKE_SOURCE_DIR}/shaders)
+
+#file(GLOB SHADERS ${SHADER_DIR}/*.vert ${SHADER_DIR}/*.frag)
+
+add_custom_target(compile_shaders
+        COMMAND chmod +x ${CMAKE_SOURCE_DIR}/compile.sh 
+        COMMAND ${CMAKE_SOURCE_DIR}/compile.sh
+        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+        COMMENT "running compile.sh to compile shaders"
+        VERBATIM)
+
+
+add_dependencies(vulkanTest compile_shaders)

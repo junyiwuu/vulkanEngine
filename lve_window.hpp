@@ -10,14 +10,17 @@ namespace lve {
 
     class LveWindow{
       private:
-
+        static void framebufferResizedCallback(GLFWwindow *window, int width, int height);
         void initWindow();
-        const int width;
-        const int height;
-        std::string windowName;
+        int width;
+        int height;
+        bool framebufferResized = false;
 
-        //GLFWwindow是一个数据类型， *指针. 指向window的内存位置
+        std::string windowName;
         GLFWwindow *window;
+
+        
+
 
       public:
         //如果constructor是private那么就无法在为外部创建object
@@ -32,6 +35,11 @@ namespace lve {
         bool shouldClose() {return glfwWindowShouldClose(window);}
         VkExtent2D getExtend() {return { 
             static_cast<uint32_t>(width), static_cast<uint32_t>(height) }; }
+
+        bool wasWindowResized() {return framebufferResized; }
+        void resetWindowResizedFlag() {framebufferResized = false; }
+
+
 
         void createWindowSurface(VkInstance instance, VkSurfaceKHR *surface);
 
