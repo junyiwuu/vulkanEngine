@@ -8,6 +8,7 @@ layout (location = 1) in vec3 color;  //从vertex buffer读入位置数据
 
 
 layout (push_constant) uniform Push{
+    mat2 transform;
     vec2 offset;
     vec3 color;
 }push;
@@ -15,8 +16,6 @@ layout (push_constant) uniform Push{
 
 //this main function is going to be executed once for each vertex  we have
 void main(){
-    //assign a value to act as our output , 4d vector.. 
-    //top left is (-1,-1), buttom right is (1,1), so center is (0,0)
-    gl_Position = vec4( position + push.offset , 0.0, 1.0 );
+    gl_Position = vec4( push.transform * position + push.offset , 0.0, 1.0 );
 
 }
