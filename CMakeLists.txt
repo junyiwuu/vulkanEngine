@@ -24,6 +24,8 @@ add_executable(vulkanTest
         lve_pipeline.cpp
         lve_swap_chain.cpp
         lve_model.cpp
+        lve_renderer.cpp
+        simple_render_system.cpp
         )
 
 

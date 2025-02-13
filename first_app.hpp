@@ -1,11 +1,9 @@
 #pragma once
 
 #include "lve_device.hpp"
-#include "lve_pipeline.hpp"
 #include "lve_game_object.hpp"
-#include"lve_window.hpp"
-#include "lve_swap_chain.hpp"
-//#include "lve_model.hpp"
+#include "lve_window.hpp"
+#include "lve_renderer.hpp"
 
 
 #include <memory>
@@ -32,26 +30,13 @@ class FirstApp{
     void run();
 
   private:
-
     void loadGameObjects();
-    void createPipelineLayout();
-    void createPipeline();
-    void createCommandBuffers();
-    void freeCommandBuffers();
-    void drawFrame();
-    void recreateSwapChain();
-    void recordCommandBuffer(int imageIndex);
-    void renderGameObjects(VkCommandBuffer commandBuffer);
 
 
     LveWindow lveWindow_app{WIDTH , HEIGHT, "hello vulkan"} ;
     LveDevice lveDevice_app{lveWindow_app};
-    std::unique_ptr<LveSwapChain> lveSwapChain_app;
-    
-    
-    std::unique_ptr<LvePipeline> lvePipeline ;
-    VkPipelineLayout pipelineLayout;
-    std::vector<VkCommandBuffer> commandBuffers;
+    LveRenderer lveRenderer{lveWindow_app, lveDevice_app};
+ 
     std::vector<LveGameObject> gameObjects;
     
 };
