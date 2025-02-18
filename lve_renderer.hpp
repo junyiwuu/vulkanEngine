@@ -21,7 +21,7 @@ class LveRenderer{
     LveRenderer &operator=(const LveRenderer&) = delete;
 
     VkRenderPass getSwapChainRenderPass() const {return lveSwapChain_app->getRenderPass(); }
-
+    float getAspectRatio() const {return lveSwapChain_app->extentAspectRatio(); }
     bool isFrameInProgress() const {return isFrameStarted; }
 
     VkCommandBuffer getCurrentCommandBuffer() const {

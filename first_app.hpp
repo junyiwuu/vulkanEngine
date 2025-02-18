@@ -23,6 +23,7 @@ class FirstApp{
     ~FirstApp();
 
 
+    
     FirstApp(const FirstApp&) = delete;  //禁止copy这个class的object
     FirstApp &operator=(const FirstApp&) = delete;
 

@@ -26,6 +26,8 @@ add_executable(vulkanTest
         lve_model.cpp
         lve_renderer.cpp
         simple_render_system.cpp
+        lve_camera.cpp
+        keyboard_movement_controller.cpp
         )
 
 
