@@ -65,75 +65,17 @@ void FirstApp::run(){
 }
 
 
-// temporary helper function, creates a 1x1x1 cube centered at offset
-std::unique_ptr<LveModel> createCubeModel(LveDevice& device, glm::vec3 offset) {
-    LveModel::Builder modelBuilder{};
-    modelBuilder.vertices = {
-
-        // left face (white)
-        {{-.5f, -.5f, -.5f}, {.9f, .9f, .9f}},
-        {{-.5f, .5f, .5f}, {.9f, .9f, .9f}},
-        {{-.5f, -.5f, .5f}, {.9f, .9f, .9f}},
-        {{-.5f, -.5f, -.5f}, {.9f, .9f, .9f}},
-        {{-.5f, .5f, -.5f}, {.9f, .9f, .9f}},
-        {{-.5f, .5f, .5f}, {.9f, .9f, .9f}},
-   
-        // right face (yellow)
-        {{.5f, -.5f, -.5f}, {.8f, .8f, .1f}},
-        {{.5f, .5f, .5f}, {.8f, .8f, .1f}},
-        {{.5f, -.5f, .5f}, {.8f, .8f, .1f}},
-        {{.5f, -.5f, -.5f}, {.8f, .8f, .1f}},
-        {{.5f, .5f, -.5f}, {.8f, .8f, .1f}},
-        {{.5f, .5f, .5f}, {.8f, .8f, .1f}},
-   
-        // top face (orange, remember y axis points down)
-        {{-.5f, -.5f, -.5f}, {.9f, .6f, .1f}},
-        {{.5f, -.5f, .5f}, {.9f, .6f, .1f}},
-        {{-.5f, -.5f, .5f}, {.9f, .6f, .1f}},
-        {{-.5f, -.5f, -.5f}, {.9f, .6f, .1f}},
-        {{.5f, -.5f, -.5f}, {.9f, .6f, .1f}},
-        {{.5f, -.5f, .5f}, {.9f, .6f, .1f}},
-   
-        // bottom face (red)
-        {{-.5f, .5f, -.5f}, {.8f, .1f, .1f}},
-        {{.5f, .5f, .5f}, {.8f, .1f, .1f}},
-        {{-.5f, .5f, .5f}, {.8f, .1f, .1f}},
-        {{-.5f, .5f, -.5f}, {.8f, .1f, .1f}},
-        {{.5f, .5f, -.5f}, {.8f, .1f, .1f}},
-        {{.5f, .5f, .5f}, {.8f, .1f, .1f}},
-   
-        // nose face (blue)
-        {{-.5f, -.5f, 0.5f}, {.1f, .1f, .8f}},
-        {{.5f, .5f, 0.5f}, {.1f, .1f, .8f}},
-        {{-.5f, .5f, 0.5f}, {.1f, .1f, .8f}},
-        {{-.5f, -.5f, 0.5f}, {.1f, .1f, .8f}},
-        {{.5f, -.5f, 0.5f}, {.1f, .1f, .8f}},
-        {{.5f, .5f, 0.5f}, {.1f, .1f, .8f}},
-   
-        // tail face (green)
-        {{-.5f, -.5f, -0.5f}, {.1f, .8f, .1f}},
-        {{.5f, .5f, -0.5f}, {.1f, .8f, .1f}},
-        {{-.5f, .5f, -0.5f}, {.1f, .8f, .1f}},
-        {{-.5f, -.5f, -0.5f}, {.1f, .8f, .1f}},
-        {{.5f, -.5f, -0.5f}, {.1f, .8f, .1f}},
-        {{.5f, .5f, -0.5f}, {.1f, .8f, .1f}},
-   
-    };
-    for (auto& v : modelBuilder.vertices) {
-      v.position += offset;
-    }
-    return std::make_unique<LveModel>(device, modelBuilder);
-}
 
 
 void FirstApp::loadGameObjects(){
-    std::shared_ptr<LveModel> lveModel = createCubeModel(lveDevice_app, {0.f, 00.f, 0.f});
+    std::shared_ptr<LveModel> lveModel = LveModel::createModelFromFile(lveDevice_app, "/home/j/projects/vulkanEngine/models/smooth_vase.obj");
+    //because createModelFromFile is a static, so when call it, need to add LveModel at front
 
-    auto cube = LveGameObject::createGameObject();
-    cube.model = lveModel; 
-    cube.transform.translation = {0.f, 0.f, 2.5f };
-    cube.transform.scale = {.5f, .5f, .5f};
-    gameObjects.push_back(std::move(cube));
+    auto gameObj = LveGameObject::createGameObject();
+    gameObj.model = lveModel; 
+    gameObj.transform.translation = {0.f, 0.f, 2.5f };
+    gameObj.transform.scale = glm::vec3(3.f);
+    gameObjects.push_back(std::move(gameObj));
  
 }
 

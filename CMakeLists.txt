@@ -13,6 +13,8 @@ find_package(Vulkan REQUIRED)
 find_package(glfw3 REQUIRED)
 
 find_package(glm REQUIRED)
+include_directories(${CMAKE_SOURCE_DIR}/libs)
+
 
 # file(GLOB SOURCES "*.cpp")
 #add the executable target
